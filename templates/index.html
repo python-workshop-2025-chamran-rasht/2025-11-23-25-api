@@ -6,11 +6,57 @@
         <title>Homepage</title>
     </head>
     <body>
-        <h1>Homepage</h1>
+        <header>
+            <nav>
+                <a href="{{ url_for('main.index_ep') }}">Homepage</a>,
+                {% if current_user.is_anonymous %}
+                <a href="{{ url_for('auth.login_ep') }}">Login</a>,
+                <a href="{{ url_for('auth.signup_ep') }}">Signup</a>
+                {% else %}
+                <a href="{{ url_for('main.user_ep', username=current_user.username) }}">Profile</a>,
+                <a href="{{ url_for('auth.logout_ep') }}">Signout</a>
+                {% endif %}
+            </nav>
+        </header>
 
-        <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-            Perspiciatis, eum? Autem sapiente, nostrum magnam earum fuga ipsum
-            culpa minus architecto praesentium qui quidem error perspiciatis
-            recusandae vel, pariatur, quis dolorum.</p>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <ul>
+            {% for i in messages %}
+            <li>{{i}}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% endwith %}
+
+        {% block content %}
+        <h1>Hi, {{ current_user.username }}!</h1>
+
+        <form action="" method="post">
+            {{ form.hidden_tag() }}
+            <p>
+                {{ form.content.label }}
+                {{ form.content(size=32) }}
+                {% for i in form.content.errors %}
+                <span style="color: red">[ {{i}} ]</span>
+                {% endfor %}
+            </p>
+            <p>
+                {{ form.submit() }}
+            </p>
+        </form>
+
+        <hr>
+
+        {% for post in posts %}
+            {% include '_post.html' %}
+        {% endfor %}
+        {% if prev_url %}
+        <a href="{{ prev_url }}">Newer posts</a>
+        {% endif %}
+        {% if next_url %}
+        <a href="{{ next_url }}">Older posts</a>
+        {% endif %}
+        {% endblock %}
     </body>
 </html>

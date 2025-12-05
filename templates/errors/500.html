@@ -1,0 +1,10 @@
+{% extends "index.html" %}
+
+{% block content %}
+<h1>Something went wrong</h1>
+
+<p>The web administrator was notified. Please either reload the page, or try again later.</p>
+
+<a href="">Reload</a>,
+<a href="{{ url_for('main.index_ep') }}">Homepage</a>.
+{% endblock %}
